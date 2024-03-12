@@ -1,4 +1,7 @@
 const inquirer = require('inquirer');
+const { displayAllDepartments } = require('./departmentView');
+const { displayAllRoles } = require('./roleView');
+const { displayAllEmployees } = require('./employeeView'); 
 
 function displayMainMenu() {
     inquirer
@@ -21,13 +24,13 @@ function displayMainMenu() {
             // Based on the user's choice, call corresponding functions or exit
             switch (answer.action) {
                 case 'View all departments':
-                    // Call the function to view all departments
+                    displayAllDepartments();
                     break;
                 case 'View all roles':
-                    // Call the function to view all roles
+                    displayAllRoles(); // Call the function to view all roles
                     break;
                 case 'View all employees':
-                    // Call the function to view all employees
+                    displayAllEmployees(); // Call the function to view all employees
                     break;
                 case 'Add a department':
                     // Call the function to add a department

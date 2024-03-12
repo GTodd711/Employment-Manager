@@ -1,6 +1,6 @@
-const Department = require('../models/department');
 const db = require('../utils/database');
 
+// Function to fetch all departments
 async function getAllDepartments() {
     try {
         const [departments] = await db.query('SELECT * FROM department');

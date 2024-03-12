@@ -3,9 +3,9 @@ const mysql = require('mysql2');
 // Create a connection pool
 const pool = mysql.createPool({
     host: 'localhost',
-    user: 'your_username',
-    password: 'your_password',
-    database: 'your_database'
+    user: 'root',
+    password: 'gt72952',
+    database: 'your_database',
 });
 
 // Promisify the pool
