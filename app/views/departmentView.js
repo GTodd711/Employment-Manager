@@ -2,18 +2,26 @@ const inquirer = require('inquirer');
 const db = require('../utils/database');
 const { displayMainMenu } = require('./displayMainMenu'); // Import displayMainMenu
 
-function displayAllDepartments(departments) {
-    // Check if departments is undefined or null
-    if (!departments || departments.length === 0) {
-        console.log('No departments found.');
-    } else {
-        console.log("All Departments:");
-        departments.forEach(department => {
-            console.log(`ID: ${department.id} | Name: ${department.name}`);
-        });
+// Function to display all departments
+async function displayAllDepartments() {
+    try {
+        const [departments] = await db.query('SELECT * FROM department');
+        if (!departments || departments.length === 0) {
+            console.log('No departments found.');
+        } else {
+            console.log("All Departments:");
+            departments.forEach(department => {
+                console.log(`ID: ${department.id} | Name: ${department.name}`);
+            });
+        }
+        promptReturnToMainMenu(); // Prompt to return to main menu
+    } catch (error) {
+        console.error('Error fetching departments:', error);
+        promptReturnToMainMenu(); // Return to the main menu if an error occurs
     }
 }
 
+// Function to prompt the user to return to the main menu
 function promptReturnToMainMenu() {
     inquirer
         .prompt({
@@ -32,6 +40,7 @@ function promptReturnToMainMenu() {
         });
 }
 
+// Function to add a department
 async function addDepartment() {
     try {
         const departmentData = await inquirer.prompt([
@@ -57,4 +66,4 @@ async function addDepartment() {
     }
 }
 
-module.exports = { displayAllDepartments, addDepartment, promptReturnToMainMenu };
+module.exports = { displayAllDepartments, addDepartment };

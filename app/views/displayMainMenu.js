@@ -1,4 +1,8 @@
 const inquirer = require('inquirer');
+const departmentView = require('./departmentView');
+const roleView = require('./roleView');
+const employeeView = require('./employeeView');
+const db = require('../utils/database'); // Import the database connection
 
 function displayMainMenu() {
     inquirer
@@ -18,48 +22,66 @@ function displayMainMenu() {
             ]
         })
         .then(answer => {
-            // Based on the user's choice, call corresponding functions or exit
             switch (answer.action) {
                 case 'View all departments':
-                    // Importing within the function
-                    const departmentView = require('./departmentView');
                     departmentView.displayAllDepartments();
                     break;
                 case 'View all roles':
-                    // Importing within the function
-                    const roleView = require('./roleView');
                     roleView.displayAllRoles();
                     break;
                 case 'View all employees':
-                    // Importing within the function
-                    const employeeView = require('./employeeView');
                     employeeView.displayAllEmployees();
                     break;
                 case 'Add a department':
-                    // Importing within the function
-                    const departmentViewAdd = require('./departmentView');
-                    departmentViewAdd.addDepartment();
+                    departmentView.addDepartment();
                     break;
                 case 'Add a role':
-                    // Importing within the function
-                    const roleViewAdd = require('./roleView');
-                    roleViewAdd.addRole();
+                    roleView.addRole();
                     break;
                 case 'Add an employee':
-                    // Importing within the function
-                    const employeeViewAdd = require('./employeeView');
-                    employeeViewAdd.addEmployee();
+                    employeeView.addEmployee();
                     break;
                 case 'Update an employee role':
-                    // Importing within the function
-                    const employeeViewUpdate = require('./employeeView');
-                    employeeViewUpdate.updateEmployeeRole();
+                    employeeView.updateEmployeeRole();
                     break;
                 case 'Exit':
                     console.log('Exiting the application');
                     process.exit(0);
-            }
+
+        };
+})};
+
+function viewAnyTable() {
+    inquirer
+        .prompt({
+            name: 'tableName',
+            type: 'input',
+            message: 'Enter the name of the table you want to view:'
+        })
+        .then(answer => {
+            const tableName = answer.tableName.trim(); // Remove leading/trailing spaces
+            viewTable(tableName);
         });
+}
+
+async function viewTable(tableName) {
+    try {
+        // Construct the query to select all rows from the specified table
+        const query = `SELECT * FROM ${tableName}`;
+
+        // Execute the query
+        const [rows, fields] = await db.query(query);
+
+        // Display the retrieved data
+        console.log(`\nAll ${tableName}s:`);
+        console.table(rows); // Assuming you want to display the results in a table format
+
+        // Display the main menu again
+        displayMainMenu();
+    } catch (error) {
+        console.error(`Error retrieving data from ${tableName}:`, error);
+        // Handle the error here
+    }
 }
 
 module.exports = { displayMainMenu };
