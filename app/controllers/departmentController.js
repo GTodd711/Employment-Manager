@@ -1,19 +1,50 @@
+const inquirer = require('inquirer');
 const db = require('../utils/database');
-const { displayAllDepartments } = require('../views/departmentView');
+const departmentView = require('../views/departmentView');
+const { returnToMainMenu } = require('../mainMenuHandler');
 
 async function getAllDepartments() {
     try {
-        const departments = await db.query('SELECT * FROM department');
-        if (departments.length === 0) {
+        const [departments] = await db.query('SELECT * FROM department');
+        if (!departments || departments.length === 0) {
             console.log('No departments found.');
         } else {
-            displayAllDepartments(departments); // Pass departments to the view
+            console.log("All Departments:");
+            departments.forEach(department => {
+                console.log(`ID: ${department.id} | Name: ${department.name}`);
+            });
         }
-        return departments;
+        returnToMainMenu(); // Prompt to return to main menu
     } catch (error) {
-        console.error('Error fetching departments: ', error);
-        throw error;
+        console.error('Error fetching departments:', error);
+        returnToMainMenu(); // Return to the main menu if an error occurs
     }
 }
 
-module.exports = { getAllDepartments };
+
+async function addDepartment() {
+    try {
+        const departmentData = await inquirer.prompt([
+            {
+                name: 'name',
+                type: 'input',
+                message: 'Enter the name of the department:',
+                validate: (value) => {
+                    if (value.trim() !== '') {
+                        return true;
+                    }
+                    return 'Please enter a department name.';
+                },
+            },
+        ]);
+
+        const result = await db.query('INSERT INTO department SET ?', departmentData);
+        console.log('Department added successfully!');
+        returnToMainMenu(); 
+    } catch (error) {
+        console.error('Error adding department:', error);
+        returnToMainMenu(); 
+    }
+};
+
+module.exports = { getAllDepartments, addDepartment };

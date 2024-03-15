@@ -1,9 +1,9 @@
 const inquirer = require('inquirer');
-const roleView = require('../views/roleView')
-const departmentView = require('../views/departmentView'); 
-const employeeView = require('../views/employeeView');
 
-function displayMainMenu() {
+function displayMainMenu(departmentController, roleController, employeeController) {
+    console.log('roleController:', roleController);
+    console.log('departmentController:', departmentController);
+    console.log('employeeController:', employeeController);
     inquirer
         .prompt({
             name: 'action',
@@ -23,25 +23,25 @@ function displayMainMenu() {
         .then(answer => {
             switch (answer.action) {
                 case 'View all departments':
-                    departmentView.displayAllDepartments(returnToMainMenu);
+                    departmentController.getAllDepartments(returnToMainMenu);
                     break;
                 case 'View all roles':
-                    roleView.displayAllRoles(returnToMainMenu);
+                    roleController.getAllRoles(returnToMainMenu);
                     break;
                 case 'View all employees':
-                    employeeView.displayAllEmployees(returnToMainMenu);
+                    employeeController.getAllEmployees(returnToMainMenu);
                     break;
                 case 'Add a department':
-                    departmentView.addDepartment(returnToMainMenu);
+                    departmentController.addDepartment(returnToMainMenu);
                     break;
                 case 'Add a role':
-                    roleView.addRole(returnToMainMenu);
+                    roleController.addRole(returnToMainMenu);
                     break;
                 case 'Add an employee':
-                    employeeView.addEmployee(returnToMainMenu);
+                    employeeController.addEmployee(returnToMainMenu);
                     break;
                 case 'Update an employee role':
-                    employeeView.updateEmployeeRole(returnToMainMenu);
+                    employeeController.updateEmployeeRole(returnToMainMenu);
                     break;
                 case 'Exit':
                     console.log('Exiting the application');
@@ -61,7 +61,7 @@ function returnToMainMenu() {
         })
         .then(answer => {
             if (answer.return) {
-                displayMainMenu(); // Call displayMainMenu function
+                displayMainMenu(); // This should be modified based on your requirement
             } else {
                 console.log('Exiting the application.');
                 process.exit(0);
@@ -69,4 +69,4 @@ function returnToMainMenu() {
         });
 }
 
-module.exports = { returnToMainMenu,displayMainMenu };
+module.exports = { returnToMainMenu, displayMainMenu };
