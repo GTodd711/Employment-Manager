@@ -1,33 +1,17 @@
+// roleController.js
 const inquirer = require('inquirer');
 const db = require('../utils/database');
-const roleView = require('../views/roleView');
+const { returnToMainMenu, displayMainMenu } = require('../mainMenuHandler');
+const { displayAllRoles } = require('../views/roleView');
 
-async function getAllRoles() {
+async function displayRoles() {
     try {
-        const roles = await db.query('SELECT * FROM role');
-        console.log('Roles:', roles); // Add this line for debugging
-        roleView.displayAllRoles(roles); // Call the view function to display roles
+        const roles = await db.query('SELECT * FROM role'); // Fetch roles from the database
+        await displayAllRoles(roles); // Call the view function to display roles
+        await returnToMainMenu(displayMainMenu); // Prompt to return to the main menu
     } catch (error) {
-        console.error('Error fetching roles:', error);
-        returnToMainMenu(); // Return to the main menu if an error occurs
-    }
-}
-
-async function viewAllRoles() {
-    try {
-        // Fetch all roles with their corresponding departments
-        const roles = await db.query(`
-            SELECT r.id AS RoleID, r.title AS JobTitle, r.salary AS Salary, d.name AS Department
-            FROM role r
-            JOIN department d ON r.department_id = d.id
-        `);
-
-        console.log("\nAll Roles:");
-        console.table(roles); // Print the roles in a table format
-        return roles; // Return the roles data
-    } catch (error) {
-        console.error('Error fetching roles:', error);
-        throw error; // Throw the error to be caught by the caller
+        console.error('Error fetching and displaying roles:', error);
+        await returnToMainMenu(displayMainMenu); // Return to the main menu if an error occurs
     }
 }
 
@@ -70,11 +54,11 @@ async function addRole() {
         });
 
         console.log('Role added successfully!');
-        returnToMainMenu();
+        await returnToMainMenu(displayMainMenu); // Prompt to return to the main menu
     } catch (error) {
         console.error('Error adding role:', error);
-        returnToMainMenu();
+        await returnToMainMenu(displayMainMenu); // Return to the main menu if an error occurs
     }
 }
 
-module.exports = { getAllRoles, viewAllRoles, addRole };
+module.exports = { displayRoles, addRole };

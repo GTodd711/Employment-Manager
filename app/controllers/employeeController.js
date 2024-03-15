@@ -1,6 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('../utils/database');
-const { returnToMainMenu } = require('../mainMenuHandler');
+const { returnToMainMenu, displayMainMenu } = require('../mainMenuHandler');
 const employeeView = require('../views/employeeView');
 
 async function getAllEmployees() {
@@ -19,11 +19,11 @@ async function getAllEmployees() {
             LEFT JOIN department d ON r.department_id = d.id
             LEFT JOIN employee m ON e.manager_id = m.id
         `);
-
         employeeView.displayAllEmployees(employees);
+        await returnToMainMenu(displayMainMenu); // Prompt to return to the main menu
     } catch (error) {
         console.error('Error fetching employees:', error);
-        returnToMainMenu();
+        await returnToMainMenu(displayMainMenu); // Return to the main menu if an error occurs
     }
 }
 
@@ -86,11 +86,10 @@ async function addEmployee() {
         });
 
         console.log('Employee added successfully!');
-        returnToMainMenu();
     } catch (error) {
         console.error('Error adding employee:', error);
-        returnToMainMenu();
     }
+    await returnToMainMenu(displayMainMenu); // Prompt to return to the main menu
 }
 
 async function updateEmployeeRole() {
@@ -119,11 +118,11 @@ async function updateEmployeeRole() {
         await db.query('UPDATE employee SET role_id = ? WHERE id = ?', [newRole.role_id, employeeToUpdate.employee_id]);
 
         console.log('Employee role updated successfully!');
-        returnToMainMenu();
     } catch (error) {
         console.error('Error updating employee role:', error);
-        returnToMainMenu();
     }
+    await returnToMainMenu(displayMainMenu); // Prompt to return to the main menu
 }
+
 
 module.exports = { getAllEmployees, addEmployee, updateEmployeeRole };

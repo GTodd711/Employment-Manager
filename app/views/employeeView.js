@@ -6,13 +6,12 @@ async function displayAllEmployees(employees) {
             console.log('No employees found.');
         } else {
             console.log("\nAll Employees:");
-            console.table(employees);
+            console.table(employees); // Display employees using console.table
         }
-        returnToMainMenu();
     } catch (error) {
         console.error('Error displaying employees:', error);
-        returnToMainMenu();
     }
+    returnToMainMenu();
 }
 
 module.exports = { displayAllEmployees };

@@ -1,7 +1,6 @@
 const inquirer = require('inquirer');
 const db = require('../utils/database');
-const departmentView = require('../views/departmentView');
-const { returnToMainMenu } = require('../mainMenuHandler');
+const { returnToMainMenu, displayMainMenu } = require('../mainMenuHandler');
 
 async function getAllDepartments() {
     try {
@@ -14,11 +13,10 @@ async function getAllDepartments() {
                 console.log(`ID: ${department.id} | Name: ${department.name}`);
             });
         }
-        returnToMainMenu(); // Prompt to return to main menu
     } catch (error) {
         console.error('Error fetching departments:', error);
-        returnToMainMenu(); // Return to the main menu if an error occurs
     }
+    await returnToMainMenu(displayMainMenu); // Prompt to return to the main menu
 }
 
 
@@ -40,11 +38,10 @@ async function addDepartment() {
 
         const result = await db.query('INSERT INTO department SET ?', departmentData);
         console.log('Department added successfully!');
-        returnToMainMenu(); 
     } catch (error) {
         console.error('Error adding department:', error);
-        returnToMainMenu(); 
     }
-};
+    await returnToMainMenu(displayMainMenu); // Prompt to return to the main menu
+}
 
 module.exports = { getAllDepartments, addDepartment };
