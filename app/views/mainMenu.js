@@ -1,9 +1,7 @@
 const inquirer = require('inquirer');
-const { displayAllDepartments } = require('./departmentView');
-const { displayAllRoles } = require('./roleView');
-const { displayAllEmployees } = require('./employeeView'); 
-const { displayMainMenu } = require('./displayMainMenu');
+const departmentView = require('./departmentView');
+const roleView = require('./roleView');
+const employeeView = require('./employeeView');
+const { returnToMainMenu } = require('../controllers/mainMenuHandler');
 
-
-// Export the displayMainMenu function along with other functions
-module.exports = { displayMainMenu, displayAllDepartments, displayAllRoles, displayAllEmployees };
+module.exports = { departmentView, roleView, employeeView, returnToMainMenu };

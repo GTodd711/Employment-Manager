@@ -1,6 +1,9 @@
 const inquirer = require('inquirer');
-const db = require('./utils/database'); // Import the database connection
-const { displayMainMenu } = require('./views/mainMenu');
+const db = require('./utils/database'); 
+const { returnToMainMenu } = require('./controllers/mainMenuHandler'); // Import returnToMainMenu from mainMenuHandler
+const departmentView = require('./views/departmentView'); 
+const roleView = require('./views/roleView'); 
+const employeeView = require('./views/employeeView'); 
 
 // Main function to start the application
 async function startApp() {
@@ -40,6 +43,15 @@ async function startApp() {
                 tableName = 'employee';
                 queryMessage = 'All Employees';
                 break;
+            case 'Add a department':
+                departmentView.addDepartment(returnToMainMenu); // Pass returnToMainMenu as a callback
+                return; 
+            case 'Add a role':
+                roleView.addRole(returnToMainMenu); // Pass returnToMainMenu as a callback
+                return; 
+            case 'Add an employee':
+                employeeView.addEmployee(returnToMainMenu); // Pass returnToMainMenu as a callback
+                return; 
             case 'Exit':
                 console.log('Exiting the application');
                 process.exit(0);
@@ -61,7 +73,6 @@ async function startApp() {
         // Handle the error here
     }
 }
-
 
 // Start the application
 startApp();
